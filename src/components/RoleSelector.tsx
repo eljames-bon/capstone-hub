@@ -32,19 +32,19 @@ export default function RoleSelector({
 
   const getRoleIcon = (role: UserRole) => {
     switch (role) {
-      case 'ADMIN': return <ShieldAlert className="w-3.5 h-3.5 text-rose-500" />;
-      case 'ADVISER': return <UserCheck className="w-3.5 h-3.5 text-emerald-500" />;
-      case 'PANELIST': return <Award className="w-3.5 h-3.5 text-amber-500" />;
-      default: return <GraduationCap className="w-3.5 h-3.5 text-blue-500" />;
+      case 'ADMIN': return <ShieldAlert className="w-4 h-4 text-rose-600" />;
+      case 'ADVISER': return <UserCheck className="w-4 h-4 text-emerald-600" />;
+      case 'PANELIST': return <Award className="w-4 h-4 text-amber-600" />;
+      default: return <GraduationCap className="w-4 h-4 text-blue-600" />;
     }
   };
 
   const getRoleBadgeColor = (role: UserRole) => {
     switch (role) {
-      case 'ADMIN': return 'bg-rose-500/15 text-rose-400 border-rose-500/30';
-      case 'ADVISER': return 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30';
-      case 'PANELIST': return 'bg-amber-500/15 text-amber-400 border-amber-500/30';
-      default: return 'bg-blue-500/15 text-blue-400 border-blue-500/30';
+      case 'ADMIN': return 'bg-rose-100 text-rose-800 border-rose-200';
+      case 'ADVISER': return 'bg-emerald-100 text-emerald-800 border-emerald-200';
+      case 'PANELIST': return 'bg-amber-100 text-amber-800 border-amber-200';
+      default: return 'bg-blue-100 text-blue-800 border-blue-200';
     }
   };
 
@@ -66,28 +66,60 @@ export default function RoleSelector({
           </div>
         </div>
 
-        {/* Simulator controls - replaced user selector with read-only badge */}
+        {/* Simulator controls */}
         <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-2 bg-slate-900/80 border border-slate-850 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-200 shadow-inner">
-            <div className="w-5 h-5 bg-[#1b4e80] text-slate-100 rounded-full flex items-center justify-center text-[10px] font-extrabold shadow-sm select-none">
-              {currentUser.name.slice(0, 2).toUpperCase()}
-            </div>
-            <div className="flex flex-col">
-              <span className="font-extrabold text-[12px] leading-none text-slate-100">{currentUser.name}</span>
-              <span className="text-[9px] text-slate-400 font-medium tracking-wide">Logged-in Account</span>
-            </div>
-            <div className="h-5 w-[1px] bg-slate-800 mx-1.5" />
-            <span className={`px-2 py-0.5 rounded-full border text-[9px] font-bold flex items-center gap-1 uppercase select-none ${getRoleBadgeColor(currentUser.role)}`}>
-              {getRoleIcon(currentUser.role)}
-              <span>{currentUser.role}</span>
+          <div className="text-xs font-semibold text-slate-300 flex items-center gap-1.5 min-w-max">
+            <span>Current Role Session:</span>
+            <span className={`px-2 py-0.5 rounded-full border text-[10px] font-bold ${getRoleBadgeColor(currentUser.role)}`}>
+              {currentUser.role}
             </span>
+          </div>
+
+          <div className="relative inline-block">
+            <select
+              value={currentUser.id}
+              onChange={(e) => {
+                const targetUser = users.find(u => u.id === e.target.value);
+                if (targetUser) onUserChange(targetUser);
+              }}
+              className="bg-slate-900 text-slate-50 border border-slate-700 rounded-lg px-3 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-blue-500 focus:outline-none cursor-pointer pr-8 hover:bg-slate-850 transition duration-150 w-64 shadow-md"
+              style={{ WebkitAppearance: 'none', MozAppearance: 'none', appearance: 'none' }}
+              id="role-switch-dropdown"
+            >
+              <optgroup label="👑 EXECUTIVE/ADMIN" className="bg-slate-900 text-slate-300">
+                {admins.map(u => (
+                  <option key={u.id} value={u.id}>👑 {u.name} (Dean/Admin)</option>
+                ))}
+              </optgroup>
+              <optgroup label="🎓 ADVISERS (FACULTY)" className="bg-slate-900 text-slate-300">
+                {advisers.map(u => (
+                  <option key={u.id} value={u.id}>👨‍🏫 {u.name}</option>
+                ))}
+              </optgroup>
+              <optgroup label="🎖️ PANELIST MEMBERS" className="bg-slate-900 text-slate-300">
+                {panelists.map(u => (
+                  <option key={u.id} value={u.id}>⚖️ {u.name}</option>
+                ))}
+              </optgroup>
+              <optgroup label="👦 STUDENTS" className="bg-slate-900 text-slate-300">
+                {students.map(u => (
+                  <option key={u.id} value={u.id}>📝 {u.name} ({u.name === 'benok' ? 'Group 1' : u.name === 'roni' ? 'Group 2' : u.name === 'erick' ? 'Group 3' : 'Group Spark'})</option>
+                ))}
+              </optgroup>
+            </select>
+            {/* Visual indicator custom arrow */}
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-slate-400">
+              <svg className="fill-current h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+              </svg>
+            </div>
           </div>
 
           <button
             onClick={onResetDb}
             disabled={isResetting}
             title="Reset system database state to defaults"
-            className="bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 border border-blue-500/20 rounded-lg px-3 py-1.5 transition-all duration-150 flex items-center gap-1.5 text-xs font-semibold shadow-md active:scale-95 cursor-pointer"
+            className="bg-blue-600 hover:bg-blue-700 text-white border border-blue-500 rounded-lg px-3 py-1.5 transition-all duration-150 flex items-center gap-1.5 text-xs font-semibold shadow-md active:scale-95 cursor-pointer"
             id="reset-db-btn"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isResetting ? 'animate-spin' : ''}`} />
