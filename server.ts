@@ -34,16 +34,14 @@ interface DB {
 
 const DEFAULT_DB: DB = {
   users: [
-    { id: "u-stud-1", email: "student1@university.edu", name: "John Doe", role: "STUDENT", createdAt: new Date().toISOString() },
-    { id: "u-stud-2", email: "student2@university.edu", name: "Jane Smith", role: "STUDENT", createdAt: new Date().toISOString() },
-    { id: "u-stud-3", email: "student3@university.edu", name: "Alex Johnson", role: "STUDENT", createdAt: new Date().toISOString() },
-    { id: "u-stud-4", email: "student4@university.edu", name: "Alice Brown", role: "STUDENT", createdAt: new Date().toISOString() },
-    { id: "u-stud-5", email: "student5@university.edu", name: "Bob White", role: "STUDENT", createdAt: new Date().toISOString() },
-    { id: "u-adv-1", email: "evance@university.edu", name: "Dr. Evelyn Vance", role: "ADVISER", createdAt: new Date().toISOString() },
-    { id: "u-adv-2", email: "gfreeman@university.edu", name: "Dr. Gordon Freeman", role: "ADVISER", createdAt: new Date().toISOString() },
-    { id: "u-pan-1", email: "elivance@university.edu", name: "Dr. Eli Vance", role: "PANELIST", createdAt: new Date().toISOString() },
-    { id: "u-pan-2", email: "ikleiner@university.edu", name: "Dr. Isaac Kleiner", role: "PANELIST", createdAt: new Date().toISOString() },
-    { id: "u-adm-1", email: "jmossman@university.edu", name: "Prof. Judith Mossman", role: "ADMIN", createdAt: new Date().toISOString() }
+    { id: "u-stud-1", email: "benok@university.edu", name: "benok", role: "STUDENT", createdAt: new Date().toISOString() },
+    { id: "u-stud-2", email: "roni@university.edu", name: "roni", role: "STUDENT", createdAt: new Date().toISOString() },
+    { id: "u-stud-3", email: "erick@university.edu", name: "erick", role: "STUDENT", createdAt: new Date().toISOString() },
+    { id: "u-adv-1", email: "mr.adviser@university.edu", name: "mr.adviser", role: "ADVISER", createdAt: new Date().toISOString() },
+    { id: "u-adv-2", email: "mr.adviser-sec@university.edu", name: "mr.adviser", role: "ADVISER", createdAt: new Date().toISOString() },
+    { id: "u-pan-1", email: "mr.panel@university.edu", name: "mr. panel", role: "PANELIST", createdAt: new Date().toISOString() },
+    { id: "u-pan-2", email: "mrs.panel@university.edu", name: "mrs. panel", role: "PANELIST", createdAt: new Date().toISOString() },
+    { id: "u-adm-1", email: "eljames.pogi@university.edu", name: "eljames pogi", role: "ADMIN", createdAt: new Date().toISOString() }
   ],
   projects: [
     {
@@ -53,8 +51,8 @@ const DEFAULT_DB: DB = {
       course: "BS Computer Science",
       status: "DEVELOPMENT",
       adviserId: "u-adv-1",
-      adviserName: "Dr. Evelyn Vance",
-      members: ["John Doe", "Jane Smith", "Alex Johnson"],
+      adviserName: "mr.adviser",
+      members: ["benok"],
       createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
       updatedAt: new Date().toISOString()
     },
@@ -65,8 +63,8 @@ const DEFAULT_DB: DB = {
       course: "BS Information Technology",
       status: "DEFENSE",
       adviserId: "u-adv-2",
-      adviserName: "Dr. Gordon Freeman",
-      members: ["Alice Brown", "Bob White"],
+      adviserName: "mr.adviser",
+      members: ["roni"],
       createdAt: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString(),
       updatedAt: new Date().toISOString()
     },
@@ -77,8 +75,8 @@ const DEFAULT_DB: DB = {
       course: "BS Computer Engineering",
       status: "PROPOSAL",
       adviserId: "u-adv-1",
-      adviserName: "Dr. Evelyn Vance",
-      members: ["Charlie Green", "David Miller"],
+      adviserName: "mr.adviser",
+      members: ["erick"],
       createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
       updatedAt: new Date().toISOString()
     }
@@ -94,7 +92,7 @@ const DEFAULT_DB: DB = {
       fileUrl: "#",
       fileSize: "1.2 MB",
       uploadedAt: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000).toISOString(),
-      uploadedBy: "John Doe"
+      uploadedBy: "benok"
     },
     {
       id: "doc-iot-ch2-v10",
@@ -106,7 +104,7 @@ const DEFAULT_DB: DB = {
       fileUrl: "#",
       fileSize: "2.8 MB",
       uploadedAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
-      uploadedBy: "Jane Smith"
+      uploadedBy: "benok"
     },
     {
       id: "doc-iot-ch2-v11",
@@ -118,7 +116,7 @@ const DEFAULT_DB: DB = {
       fileUrl: "#",
       fileSize: "3.1 MB",
       uploadedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-      uploadedBy: "Jane Smith"
+      uploadedBy: "benok"
     },
     {
       id: "doc-crop-ch1-ch5",
@@ -130,7 +128,7 @@ const DEFAULT_DB: DB = {
       fileUrl: "#",
       fileSize: "14.5 MB",
       uploadedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
-      uploadedBy: "Alice Brown"
+      uploadedBy: "roni"
     }
   ],
   comments: [
@@ -139,7 +137,7 @@ const DEFAULT_DB: DB = {
       documentId: "doc-iot-ch2-v10",
       projectId: "p-iot-energy",
       userId: "u-adv-1",
-      userName: "Dr. Evelyn Vance",
+      userName: "mr.adviser",
       userRole: "ADVISER",
       content: "Please expand on the IoT MQTT latency protocols of section 2.3. The evaluation is missing comparative analysis with alternative lightweight message brokers like CoAP.",
       createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString()
@@ -149,9 +147,9 @@ const DEFAULT_DB: DB = {
       documentId: "doc-iot-ch2-v11",
       projectId: "p-iot-energy",
       userId: "u-stud-1",
-      userName: "John Doe",
+      userName: "benok",
       userRole: "STUDENT",
-      content: "Thanks Dr. Vance, we updated section 2.3 with CoAP comparisons and structured MQTT routing efficiency tables.",
+      content: "Thanks mr.adviser, we updated section 2.3 with CoAP comparisons and structured MQTT routing efficiency tables.",
       createdAt: new Date(Date.now() - 1.5 * 24 * 60 * 60 * 1000).toISOString()
     },
     {
@@ -159,7 +157,7 @@ const DEFAULT_DB: DB = {
       documentId: "doc-crop-ch1-ch5",
       projectId: "p-crop-yield",
       userId: "u-adv-2",
-      userName: "Dr. Gordon Freeman",
+      userName: "mr.adviser",
       userRole: "ADVISER",
       content: "Extremely detailed manuscript. The computer vision pipeline is thoroughly validated. Ready for public final oral defense board evaluation.",
       createdAt: new Date(Date.now() - 9 * 24 * 60 * 60 * 1000).toISOString()
@@ -174,7 +172,7 @@ const DEFAULT_DB: DB = {
       time: "10:00 AM - 12:00 PM",
       venue: "CS Engineering Laboratory Hall B",
       panelistIds: ["u-pan-1", "u-pan-2"],
-      panelistNames: ["Dr. Eli Vance", "Dr. Isaac Kleiner"]
+      panelistNames: ["mr. panel", "mrs. panel"]
     }
   ],
   evaluations: [
@@ -183,7 +181,7 @@ const DEFAULT_DB: DB = {
       projectId: "p-crop-yield",
       projectTitle: "AI-Powered Crop Disease Diagnosis & Yield Prediction",
       panelistId: "u-pan-1",
-      panelistName: "Dr. Eli Vance",
+      panelistName: "mr. panel",
       scoreContent: 24,
       scorePresent: 23,
       scoreTechnical: 25,
@@ -199,7 +197,7 @@ const DEFAULT_DB: DB = {
       id: "n-1",
       userId: "u-stud-1",
       title: "Document Revision Requested",
-      message: "Dr. Evelyn Vance requested revisions on Chapter 2 - v1.0 of your energy project.",
+      message: "mr.adviser requested revisions on Chapter 2 - v1.0 of your energy project.",
       isRead: false,
       linkUrl: "p-iot-energy",
       createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString()

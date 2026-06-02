@@ -83,7 +83,7 @@ export default function App() {
       setNotifications(db.notifications || []);
       setAnnouncements(db.announcements || []);
 
-      // If current user is not established yet, lock first Student John Doe (u-stud-1)
+      // If current user is not established yet, lock first Student benok (u-stud-1)
       if (!currentUser && db.users?.length > 0) {
         const student = db.users.find((u: User) => u.id === 'u-stud-1') || db.users[0];
         setCurrentUser(student);
@@ -126,7 +126,7 @@ export default function App() {
         setNotifications(data.db.notifications);
         setAnnouncements(data.db.announcements);
         
-        // Relock John Doe (u-stud-1) as current active simulation account
+        // Relock benok (u-stud-1) as current active simulation account
         const student = data.db.users.find((u: User) => u.id === 'u-stud-1');
         if (student) setCurrentUser(student);
 
@@ -158,7 +158,7 @@ export default function App() {
       });
       if (res.ok) {
         await loadDatabaseState();
-        triggerToast("🚀 Your new Capstone proposal is filed! Dr. Evelyn Vance assigned as adviser.");
+        triggerToast("🚀 Your new Capstone proposal is filed! mr.adviser assigned as adviser.");
       }
     } catch (e) {
       console.error(e);

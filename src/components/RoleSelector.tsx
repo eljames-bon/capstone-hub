@@ -101,7 +101,7 @@ export default function RoleSelector({
               </optgroup>
               <optgroup label="👦 STUDENTS" className="bg-slate-900 text-slate-300">
                 {students.map(u => (
-                  <option key={u.id} value={u.id}>📝 {u.name} ({u.name === 'John Doe' || u.name === 'Jane Smith' || u.name === 'Alex Johnson' ? 'Group IoT' : 'Group AI'})</option>
+                  <option key={u.id} value={u.id}>📝 {u.name} ({u.name === 'benok' ? 'Group 1' : u.name === 'roni' ? 'Group 2' : u.name === 'erick' ? 'Group 3' : 'Group Spark'})</option>
                 ))}
               </optgroup>
             </select>
