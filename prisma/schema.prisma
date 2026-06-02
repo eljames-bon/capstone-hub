@@ -1,0 +1,191 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  ADVISER
+  PANELIST
+  ADMIN
+}
+
+enum ProjectStatus {
+  PROPOSAL
+  DEVELOPMENT
+  FINAL_MANUSCRIPT
+  DEFENSE
+  COMPLETED
+}
+
+enum DocumentStatus {
+  PENDING
+  REVISION_REQUESTED
+  APPROVED
+}
+
+model User {
+  id             String          @id @default(uuid())
+  email          String          @unique
+  name           String
+  avatarUrl      String?
+  role           Role            @default(STUDENT)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  studentProfile StudentProfile?
+  adviserProfile AdviserProfile?
+  panelistProfile PanelistProfile?
+  comments       Comment[]
+  notifications  Notification[]
+}
+
+model StudentProfile {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course    String
+  idNumber  String   @unique
+  projectId String?
+  project   Project? @relation("ProjectStudents", fields: [projectId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AdviserProfile {
+  id         String    @id @default(uuid())
+  userId     String    @unique
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  department String
+  maxGroups  Int       @default(5)
+  projects   Project[] @relation("ProjectAdviser")
+
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model PanelistProfile {
+  id              String            @id @default(uuid())
+  userId          String            @unique
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  department      String
+  panelistDefense PanelistDefense[]
+
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+}
+
+model Project {
+  id          String        @id @default(uuid())
+  title       String
+  abstract    String        @db.Text
+  course      String
+  status      ProjectStatus @default(PROPOSAL)
+  adviserId   String?
+  adviser     AdviserProfile? @relation("ProjectAdviser", fields: [adviserId], references: [id])
+  
+  students    StudentProfile[] @relation("ProjectStudents")
+  documents   Document[]
+  defenseSchedules DefenseSchedule[]
+  evaluations Evaluations[]
+
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([status])
+}
+
+model Document {
+  id          String         @id @default(uuid())
+  projectId   String
+  project     Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title       String
+  chapter     Int            // Chapters 1 to 5
+  version     String         // e.g., "v1.0", "v1.1", "v2.0"
+  status      DocumentStatus @default(PENDING)
+  fileUrl     String
+  fileSize    String?        // e.g., "2.4 MB"
+  uploadedAt  DateTime       @default(now())
+  uploadedBy  String         // Name or User ID of who uploaded
+
+  comments    Comment[]
+
+  @@index([projectId, chapter])
+}
+
+model Comment {
+  id         String   @id @default(uuid())
+  documentId String?
+  document   Document? @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content    String   @db.Text
+  createdAt  DateTime @default(now())
+
+  @@index([documentId])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  linkUrl   String?
+  createdAt DateTime @default(now())
+
+  @@index([userId, isRead])
+}
+
+model DefenseSchedule {
+  id        String   @id @default(uuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  date      DateTime
+  time      String   // e.g. "10:00 AM - 12:00 PM"
+  venue     String   // e.g. "Conference Room 1" or "Zoom Link"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  panelists PanelistDefense[]
+
+  @@index([projectId])
+}
+
+// Join table for DefenseSchedule and Panelists (Many-to-Many)
+model PanelistDefense {
+  id                String          @id @default(uuid())
+  defenseScheduleId String
+  defenseSchedule   DefenseSchedule @relation(fields: [defenseScheduleId], references: [id], onDelete: Cascade)
+  panelistId        String
+  panelist          PanelistProfile @relation(fields: [panelistId], references: [id], onDelete: Cascade)
+
+  @@unique([defenseScheduleId, panelistId])
+}
+
+model Evaluations {
+  id             String   @id @default(uuid())
+  projectId      String
+  project        Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  panelistId     String   // Panelist who submitted evaluation
+  panelistName   String
+  scoreContent   Int      // Score out of 25 (Content / Thesis quality)
+  scorePresent   Int      // Score out of 25 (Presentation slides / delivery)
+  scoreTechnical Int      // Score out of 25 (Technical execution, methodology, demo)
+  scoreQA        Int      // Score out of 25 (Answers to Q&A session questions)
+  totalScore     Float    // Out of 100
+  remarks        String   @db.Text
+  verdict        String   // e.g. "Passed", "Passed with Revisions", "Re-Defense"
+  createdAt      DateTime @default(now())
+
+  @@unique([projectId, panelistId])
+}
