@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { User, UserRole } from '../types';
-import { UserCheck, ShieldAlert, Award, GraduationCap, RefreshCw } from 'lucide-react';
+import { UserCheck, ShieldAlert, Award, GraduationCap, RefreshCw, LogOut } from 'lucide-react';
 
 interface RoleSelectorProps {
   users: User[];
@@ -13,6 +13,7 @@ interface RoleSelectorProps {
   onUserChange: (user: User) => void;
   onResetDb: () => void;
   isResetting: boolean;
+  onLogout: () => void;
 }
 
 export default function RoleSelector({ 
@@ -20,7 +21,8 @@ export default function RoleSelector({
   currentUser, 
   onUserChange, 
   onResetDb,
-  isResetting 
+  isResetting,
+  onLogout
 }: RoleSelectorProps) {
   // Group users by role for organized dropdown/selection
   const students = users.filter(u => u.role === 'STUDENT');
@@ -122,6 +124,16 @@ export default function RoleSelector({
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isResetting ? 'animate-spin' : ''}`} />
             <span>{isResetting ? "Re-seeding..." : "Reset Data"}</span>
+          </button>
+
+          <button
+            onClick={onLogout}
+            title="Log out of session"
+            className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg px-3 py-1.5 transition-all duration-150 flex items-center gap-1.5 text-xs font-semibold shadow-md active:scale-95 cursor-pointer"
+            id="session-logout-btn"
+          >
+            <LogOut className="w-3.5 h-3.5 text-rose-450" />
+            <span>Log Out</span>
           </button>
         </div>
       </div>

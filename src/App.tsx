@@ -24,6 +24,7 @@ import AdviserDashboard from './components/AdviserDashboard';
 import PanelistDashboard from './components/PanelistDashboard';
 import AdminDashboard from './components/AdminDashboard';
 import StatsGrid from './components/StatsGrid';
+import LoginPortal from './components/LoginPortal';
 
 // Motion animations
 import { motion, AnimatePresence } from 'motion/react';
@@ -62,6 +63,7 @@ export default function App() {
 
   // Simulation parameters
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [showKPIAnalytics, setShowKPIAnalytics] = useState(true);
@@ -478,6 +480,19 @@ export default function App() {
     );
   }
 
+  if (!isLoggedIn) {
+    return (
+      <LoginPortal 
+        users={users} 
+        onLoginSuccess={(user) => {
+          setCurrentUser(user);
+          setIsLoggedIn(true);
+          triggerToast(`🔒 Authenticated as ${user.name} (${user.role}). Redirecting...`);
+        }} 
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 font-sans flex flex-col justify-between">
       
@@ -488,6 +503,10 @@ export default function App() {
         onUserChange={handleUserChange}
         onResetDb={handleResetDb}
         isResetting={isResetting}
+        onLogout={() => {
+          setIsLoggedIn(false);
+          triggerToast("👋 Ended session. Securely logged out of OMSC Academic Portal.");
+        }}
       />
 
       {/* Main navigation, greetings, and dynamic content */}
